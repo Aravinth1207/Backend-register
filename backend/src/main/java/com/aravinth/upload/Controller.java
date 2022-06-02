@@ -50,6 +50,18 @@ public class Controller {
         repo.save(response);
         return ResponseEntity.ok("File uploaded Successfully");
    }
-
+    
+     @PostMapping("/delete")
+    public ResponseEntity <String> deleteFile(@RequestParam("filename")String fileName){
+    	BlobId id = BlobId.of(bucketName, fileName);
+    	boolean deleted= storage.delete(id);
+    	if (deleted) {
+    	repo.deleteByFileName(fileName);
+    	return new ResponseEntity<>("Deleted Successfully", HttpStatus.OK);
+    	}
+    	else {
+    		return new ResponseEntity<>("File Not Found",HttpStatus.BAD_REQUEST);
+    	}
+    }
 
 }
